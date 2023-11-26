@@ -56,14 +56,34 @@
           <p>Possui cofre: {{ room.hasVault ? 'Sim' : 'Não' }}</p>
           <p>É acessível?: {{ room.isAccessible ? 'Sim' : 'Não' }}</p>
 
-          <strong>Conferir disponibilidade</strong>
-          <br><label for="checkin-date">Data de checkin: </label>
-          <input type="date" v-model="checkinDate" id="checkin-date" name="checkin-date">
-          <br><label for="checkout-date">Data de checkout: </label>
-          <input type="date" v-model="checkoutDate" id="checkout-date" name="checkout-date">
-          <br><label for="number_guests">Número de hóspedes: </label>
-          <input type="number" id="number_guests" name="number_guests">
-          <br><button v-on:click="checkRoomAvailability(room.id)">Conferir disponibilidade</button>
+          <strong><button v-on:click="showReservationForm(room.id)">Conferir disponibilidade</button></strong>
+
+          <div v-if="currentRoomId == room.id">
+            <div id="reservation-form">
+              <br><label for="checkin-date">Data de checkin: </label>
+              <input type="date" v-model="checkinDate" id="checkin-date" name="checkin-date">
+              <br><label for="checkout-date">Data de checkout: </label>
+              <input type="date" v-model="checkoutDate" id="checkout-date" name="checkout-date">
+              <br><label for="number_guests">Número de hóspedes: </label>
+              <input type="number" v-model="numberGuests" id="number_guests" name="number_guests">
+              <br><button v-on:click="checkRoomAvailability(room.id)">Solicitar pré-reserva</button>
+            </div>
+
+            <section id="reservation-details" :hidden="hideReservationDetails">
+              <div v-if="reservationPrice != ''">
+                <p>Período disponível! Pré-reserva efetuada com sucesso!</p>
+                <p>Valor do período: R$ {{ reservationPrice }}</p>
+              </div>
+              <div v-else>
+                <p>Não foi possível efetuar sua pré-reserva.</p>
+                <dl>
+                  <dd v-for="error in errors">
+                    <p>{{ error }}</p>
+                  </dd>
+                </dl>
+              </div>
+            </section>
+          </div>
         </li>
         <br>
       </ul>

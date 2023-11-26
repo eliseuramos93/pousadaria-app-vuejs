@@ -28,6 +28,7 @@ const app = Vue.createApp({
       listRooms: [],
 
       // checkRoomAvailability data
+      currentRoomId: '',
       hideReservationDetails: true,
       checkinDate: '',
       checkoutDate: '',
@@ -42,6 +43,7 @@ const app = Vue.createApp({
       this.hideInnsList = false;
       this.hideInnDetails = true;
       this.hideRoomsList = true;
+      this.hideReservationDetails = true;
 
       this.currentInnId = '';
 
@@ -113,6 +115,33 @@ const app = Vue.createApp({
 
         this.listRooms.push(room)
       });
+    },
+
+    async checkRoomAvailability(roomId){
+      this.hideReservationDetails = false;
+
+      let base_url = `http://localhost:3000/api/v1/rooms/${roomId}/check_availability/`;
+      let params = `?start_date=${this.checkinDate}&end_date=${this.checkoutDate}&number_guests=${this.numberGuests}`;
+      let full_url = base_url + params;
+
+      let response = await fetch(full_url);
+      let data = await response.json();
+
+      this.reservationPrice = '';
+      this.errors = [];
+      if(data.price) {
+        this.reservationPrice = data.price
+      } else {
+        this.errors = data.errors
+      }
+    },
+
+    showReservationForm(roomId){
+      this.currentRoomId = roomId;
+      this.checkinDate = '';
+      this.checkoutDate = '';
+      this.numberGuests = '';
+      this.hideReservationDetails = true;
     }
   }
 });
