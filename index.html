@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <input type="text" v-model="searchText" placeholder="Pesquisar por nome">
+    <button v-on:click="getInns">Pesquisar</button>
+
+    <div v-if="listResult.length <= 0">
+      Nenhuma pousada encontrada!
+    </div>
+
+    <ul>
+      <li v-for="inn, index in listResult">
+        <div class="card">
+          <address>
+            <strong>{{ inn.brandName }}</strong>
+            <br> Nota média: {{ inn.averageRating }}
+            <br> Descrição: {{ inn.description }}
+            <br> Política da pousada: {{ inn.policy }}
+            <br> Telefone para contato: {{ inn.phoneNumber }}
+            <br> Endereço: {{ inn.streetName }}, {{ inn.number }} {{ inn.complement }}
+            <br> {{ inn.neighborhood }}, {{ inn.city }}, {{ inn.state }}
+            <br> CEP: {{ inn.zipCode }}
+          </address>
+        </div>
+      </li>
+    </ul>
+  </div>
+  
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
