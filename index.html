@@ -6,31 +6,69 @@
   <title>Document</title>
 </head>
 <body>
-  <div id="app">
+  <main id="app">
     <input type="text" v-model="searchText" placeholder="Pesquisar por nome">
-    <button v-on:click="getInns">Pesquisar</button>
+    <button v-on:click="getInns">Pesquisar Pousadas</button>
 
-    <div v-if="listResult.length <= 0">
-      Nenhuma pousada encontrada!
-    </div>
+    <section id="list-inns" :hidden='hideInnsList'>
+      <div v-if="listInns.length <= 0">
+        Nenhuma pousada encontrada!
+      </div>
 
-    <ul>
-      <li v-for="inn, index in listResult">
-        <div class="card">
+      <ul>
+        <li v-for="inn in listInns">
           <address>
-            <strong>{{ inn.brandName }}</strong>
-            <br> Nota média: {{ inn.averageRating }}
-            <br> Descrição: {{ inn.description }}
-            <br> Política da pousada: {{ inn.policy }}
-            <br> Telefone para contato: {{ inn.phoneNumber }}
-            <br> Endereço: {{ inn.streetName }}, {{ inn.number }} {{ inn.complement }}
-            <br> {{ inn.neighborhood }}, {{ inn.city }}, {{ inn.state }}
-            <br> CEP: {{ inn.zipCode }}
+            <strong> <a href="#" v-on:click="getInnDetails(inn.id)"> {{ inn.name }} </a></strong>
           </address>
-        </div>
-      </li>
-    </ul>
-  </div>
+        </li>
+      </ul>
+    </section>
+
+    <section id="inn-details" :hidden="hideInnDetails">
+      <h2>{{ brandName }}</h2>
+      <h3>Nota média: {{ averageRating }}</h3>
+
+      <p>Descrição: {{ description }}</p>
+      <p>Telefone para contato: {{ phoneNumber }}</p>
+      <p>Permite animais de estimação: {{ petFriendly ? 'Aceita' : 'Não aceita' }}</p>
+      <p>Políticas da pousada: {{ policy }}</p>
+      <p>Endereço: {{ streetName }}, {{ number }} {{ complement }}</p>
+      <p>Bairro: {{ neighborhood }} </p>
+      <p>Cidade: {{ city }} </p>
+      <p>Estado: {{ state }} </p>
+      <p>CEP: {{ zipCode }} </p>
+      <br><a href="#" v-on:click="getRooms(currentInnId)"> Mostrar quartos de {{ brandName }}</a>
+    </section>
+
+    <section id="list-rooms" :hidden="hideRoomsList">
+      <ul>
+        <li v-for="room in listRooms">
+          <strong>{{ room.name }}</strong>
+          <p>Descrição: {{ room.description }}</p>
+          <p>Área: {{ room.area }} m²</p>
+          <p>Capacidade máxima: {{ room.maxCapacity }} pessoas</p>
+          <p>Valor da diária: R$ {{ room.rentPrice }}</p>
+          <p>Possui banheiro: {{ room.hasBathroom ? 'Sim' : 'Não' }}</p>
+          <p>Possui varanda: {{ room.hasBalcony ? 'Sim' : 'Não' }}</p>
+          <p>Possui ar condicionado: {{ room.hasAirConditioner ? 'Sim' : 'Não' }}</p>
+          <p>Possui TV: {{ room.hasBathroom ? 'Sim' : 'Não' }}</p>
+          <p>Possui guarda-roupas: {{ room.hasWardrobe ? 'Sim' : 'Não' }}</p>
+          <p>Possui cofre: {{ room.hasVault ? 'Sim' : 'Não' }}</p>
+          <p>É acessível?: {{ room.isAccessible ? 'Sim' : 'Não' }}</p>
+
+          <strong>Conferir disponibilidade</strong>
+          <br><label for="checkin-date">Data de checkin: </label>
+          <input type="date" v-model="checkinDate" id="checkin-date" name="checkin-date">
+          <br><label for="checkout-date">Data de checkout: </label>
+          <input type="date" v-model="checkoutDate" id="checkout-date" name="checkout-date">
+          <br><label for="number_guests">Número de hóspedes: </label>
+          <input type="number" id="number_guests" name="number_guests">
+          <br><button v-on:click="checkRoomAvailability(room.id)">Conferir disponibilidade</button>
+        </li>
+        <br>
+      </ul>
+    </section>
+  </main>
   
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="main.js"></script>
