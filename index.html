@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Document</title>
 </head>
 <body>
@@ -10,7 +11,21 @@
     <input type="text" v-model="searchText" placeholder="Pesquisar por nome">
     <button v-on:click="getInns">Pesquisar Pousadas</button>
 
+    <section id="list-cities">
+      <h2>Lista de cidades</h2>
+      <div v-if="listCities.length <= 0">
+        Não existem cidades disponíveis
+      </div>
+
+      <ul>
+        <li v-for="city in listCities">
+          <a href="#" v-on:click="getInns(city)">{{ city }} </a>
+        </li>
+      </ul>
+    </section>
+
     <section id="list-inns" :hidden='hideInnsList'>
+      <h2>Lista de pousadas</h2>
       <div v-if="listInns.length <= 0">
         Nenhuma pousada encontrada!
       </div>
@@ -25,7 +40,7 @@
     </section>
 
     <section id="inn-details" :hidden="hideInnDetails">
-      <h2>{{ brandName }}</h2>
+      <h2>Detalhes da pousada {{ brandName }}</h2>
       <h3>Nota média: {{ averageRating }}</h3>
 
       <p>Descrição: {{ description }}</p>
@@ -41,8 +56,9 @@
     </section>
 
     <section id="list-rooms" :hidden="hideRoomsList">
+      <h2>Lista de quartos</h2>
       <ul>
-        <li v-for="room in listRooms">
+        <li v-for="room in listRooms" class="room-card">
           <strong>{{ room.name }}</strong>
           <p>Descrição: {{ room.description }}</p>
           <p>Área: {{ room.area }} m²</p>
@@ -66,7 +82,7 @@
               <input type="date" v-model="checkoutDate" id="checkout-date" name="checkout-date">
               <br><label for="number_guests">Número de hóspedes: </label>
               <input type="number" v-model="numberGuests" id="number_guests" name="number_guests">
-              <br><button v-on:click="checkRoomAvailability(room.id)">Solicitar pré-reserva</button>
+              <br><button v-on:click="checkRoomAvailability(room.id)">Enviar</button>
             </div>
 
             <section id="reservation-details" :hidden="hideReservationDetails">

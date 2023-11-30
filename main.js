@@ -1,6 +1,9 @@
 const app = Vue.createApp({
   data(){
     return {
+      // getCities data
+      listCities: [],
+
       // getInns data
       searchText: '',
       listInns: [],
@@ -38,8 +41,19 @@ const app = Vue.createApp({
     }
   },
 
+  async mounted() {
+    this.listCities = await this.getCities();
+  },
+
   methods: {
-    async getInns(){
+    async getCities(){
+      let response = await fetch('http://localhost:3000/api/v1/inns/city_list')
+      let data = await response.json();
+
+      return data;
+    },
+
+    async getInns(city = ''){
       this.hideInnsList = false;
       this.hideInnDetails = true;
       this.hideRoomsList = true;
@@ -48,8 +62,12 @@ const app = Vue.createApp({
       this.currentInnId = '';
 
       let url = ''
-      if(this.searchText) {
+      if(this.searchText && city) {
+        url = `http://localhost:3000/api/v1/inns/?name=${this.searchText}&city=${city}`
+      } else if(this.searchText) {
         url = `http://localhost:3000/api/v1/inns/?name=${this.searchText}`
+      } else if(city) {
+        url = `http://localhost:3000/api/v1/inns/?city=${city}`
       } else {
         url = `http://localhost:3000/api/v1/inns/`
       }
