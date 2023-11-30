@@ -142,7 +142,7 @@ const app = Vue.createApp({
       let params = `?start_date=${this.checkinDate}&end_date=${this.checkoutDate}&number_guests=${this.numberGuests}`;
       let full_url = base_url + params;
 
-      let response = await fetch(full_url);
+      let response = await fetch(full_url, {method: "POST"});
       let data = await response.json();
 
       this.reservationPrice = '';
